@@ -1,0 +1,15 @@
+FROM bitnami/spark:latest
+
+WORKDIR /app
+
+COPY Training.py Prediction.py requirements.txt ./
+
+COPY WineModel/ ./WineModel
+
+COPY ValidationDataset.csv ./
+
+RUN pip3 install --trusted-host pypi.python.org -r requirements.txt
+
+RUN pip3 install numpy
+
+CMD ["python3", "Prediction.py"]
