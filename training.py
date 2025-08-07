@@ -1,3 +1,5 @@
+import sys
+
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler, Normalizer, StandardScaler
 from pyspark.ml.classification import LogisticRegression, RandomForestClassifier
@@ -13,10 +15,15 @@ spark = SparkSession \
     .getOrCreate()
 
 ## Load Training Dataset
-train_df = spark.read.format('csv').options(header='true', inferSchema='true', sep=';').load('s3a://cs643proj2/TrainingDataset.csv')
-validation_df = spark.read.format('csv').options(header='true', inferSchema='true', sep=';').load('s3a://cs643proj2/ValidationDataset.csv')
 
-print("Data loaded from S3 bucket.")
+if len(sys.argv) == 3:
+    trainFile = sys.argv[1]
+    validateFile = sys.argv[2]
+
+train_df = spark.read.format('csv').options(header='true', inferSchema='true', sep=';').load('file:///'+trainFile)
+validation_df = spark.read.format('csv').options(header='true', inferSchema='true', sep=';').load('file:///'+validateFile)
+
+print("Data loaded from local paths.")
 print(train_df.toPandas().head())
 
 # def remove_quotations(s):
@@ -103,7 +110,7 @@ if evaluator.evaluate(cvModel1.transform(validation_df))  > evaluator.evaluate(c
 if evaluator.evaluate(cvModel2.transform(validation_df))  > evaluator.evaluate(cvModel1.transform(validation_df)):
     
     winner = "RandomForest"
-    cvModel2.save("s3a://cs643proj2/WineModel")
+    cvModel2.save("training/WineModel")
 
 
 print("The best prediction model we have is " + winner)
