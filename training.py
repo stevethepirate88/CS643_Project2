@@ -1,4 +1,4 @@
-import quinn
+# import quinn
 
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler, Normalizer, StandardScaler
@@ -21,15 +21,26 @@ validation_df = spark.read.format('csv').options(header='true', inferSchema='tru
 print("Data loaded from S3 bucket.")
 print(train_df.toPandas().head())
 
-def remove_quotations(s):
-    return s.replace('"', '')
+# def remove_quotations(s):
+#     return s.replace('"', '')
 
 
 # Remove those pesky quotations
-train_df = quinn.with_columns_renamed(remove_quotations)(train_df)
+
+updated_train = [
+    col_name.strip().replace('"""', '').replace('""', '').replace('"', '')
+    for col_name in train_df.columns
+]
+
+updated_validate = [
+    col_name.strip().replace('"""', '').replace('""', '').replace('"', '')
+    for col_name in validation_df.columns
+]
+
+train_df = train_df.toDF(*updated_train)
 train_df = train_df.withColumnRenamed('quality', 'label')
 
-validation_df = quinn.with_columns_renamed(remove_quotations)(validation_df)
+validation_df = validation_df.toDF(*updated_validate)
 validation_df = validation_df.withColumnRenamed('quality', 'label')
 
 print("Data has been formatted.")
