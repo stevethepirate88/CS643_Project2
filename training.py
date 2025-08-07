@@ -15,8 +15,8 @@ spark = SparkSession \
     .getOrCreate()
 
 ## Load Training Dataset
-train_df = spark.read.format('csv').options(header='true', inferSchema='true', sep=';').load('s3://cs643proj2/TrainingDataset.csv')
-validation_df = spark.read.format('csv').options(header='true', inferSchema='true', sep=';').load('s3://cs643proj2/ValidationDataset.csv')
+train_df = spark.read.format('csv').options(header='true', inferSchema='true', sep=';').load('s3a://cs643proj2/TrainingDataset.csv')
+validation_df = spark.read.format('csv').options(header='true', inferSchema='true', sep=';').load('s3a://cs643proj2/ValidationDataset.csv')
 
 print("Data loaded from S3 bucket.")
 print(train_df.toPandas().head())
@@ -100,12 +100,12 @@ if evaluator.evaluate(cvModel1.transform(validation_df))  > evaluator.evaluate(c
     
     winner = "LogisticRegression"
     
-    cvModel1.save("s3://cs643proj2/WineModel")
+    cvModel1.save("s3a://cs643proj2/WineModel")
     
 if evaluator.evaluate(cvModel2.transform(validation_df))  > evaluator.evaluate(cvModel1.transform(validation_df)):
     
     winner = "RandomForest"
-    cvModel2.save("s3://cs643proj2/WineModel")
+    cvModel2.save("s3a://cs643proj2/WineModel")
 
 
 print("The best prediction model we have is " + winner)

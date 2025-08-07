@@ -21,10 +21,10 @@ if len(sys.argv) == 2:
 print("=-=-=-=-=- I'm not having -A- glass of wine, Stan, I'm having 6. It's called a tasting and it's classy. -=-=-=-=-=")
 
 # Declare and load the model from S3
-model = PipelineModel.load("s3://cs643proj2/WineModel")
+model = PipelineModel.load("s3s://cs643proj2/WineModel")
 
 # Create the DataFrame
-df = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true', sep=';').load('s3://cs643proj2/ValidationDataset.csv')
+df = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true', sep=';').load('s3s://cs643proj2/ValidationDataset.csv')
 
 outputRdd = df.rdd.map(lambda row: LabeledPoint(row[-1], Vectors.dense(row[:11])))
 
