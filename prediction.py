@@ -13,7 +13,10 @@ from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 
 
 # Declare the Spark context
-conf = (SparkConf().setAppName("Predict wine app"))
+conf = (SparkConf()
+        .setAppName("Predict wine app")
+        .set("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.10.2,org.apache.hadoop:hadoop-client:2.10.2")
+        .set(("spark.jars.excludes", "com.google.guava:guava")))
 sc = SparkContext("local", conf=conf)
 sc.setLogLevel("ERROR")
 sqlContext = SQLContext(sc)

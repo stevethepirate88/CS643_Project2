@@ -38,7 +38,7 @@ model = CrossValidatorModel.load("./WineModel")
 
 
 # Create the DataFrame
-input_df = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true', sep=';').load("./ValidationDataset.csv")
+input_df = sqlContext.read.format('com.databricks.spark.csv').options(header='true', inferschema='true', sep=';').load("./Validation/*.csv")
 
 updated_validate = [
     col_name.strip().replace('"""', '').replace('""', '').replace('"', '')
