@@ -1,5 +1,3 @@
-# import quinn
-
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler, Normalizer, StandardScaler
 from pyspark.ml.classification import LogisticRegression, RandomForestClassifier
@@ -100,7 +98,7 @@ if evaluator.evaluate(cvModel1.transform(validation_df))  > evaluator.evaluate(c
     
     winner = "LogisticRegression"
     
-    cvModel1.save("s3a://cs643proj2/WineModel")
+    cvModel1.save("training/WineModel")
     
 if evaluator.evaluate(cvModel2.transform(validation_df))  > evaluator.evaluate(cvModel1.transform(validation_df)):
     
